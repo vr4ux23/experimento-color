@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { shapes } from './components/Shapes';
-import { generateTrial, Difficulty, TrialData } from './utils/colorGenerator';
+import { generateTrial } from './utils/colorGenerator';
+import type { Difficulty, TrialData } from './utils/colorGenerator';
 import Logo from './components/Logo';
 
 type Screen = 'registration' | 'instructions' | 'playing' | 'results';

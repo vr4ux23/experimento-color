@@ -1,4 +1,5 @@
-import { ShapeType, shapes } from '../components/Shapes';
+import type { ShapeType } from '../components/Shapes';
+import { shapes } from '../components/Shapes';
 
 export type Difficulty = 'easy' | 'intermediate' | 'difficult';
 
