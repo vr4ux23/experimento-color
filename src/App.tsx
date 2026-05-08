@@ -75,7 +75,6 @@ function App() {
   };
 
   const sendDataToSheets = async (finalResults: ResultRecord[]) => {
-    // URL de ejemplo - El usuario deberá reemplazarla con su Web App URL de Google Apps Script
     const SCRIPT_URL = 'https://script.google.com/macros/s/REEMPLAZAR_CON_TU_URL/exec';
     
     const correctEasy = finalResults.filter(r => r.difficulty === 'easy' && r.correct).length;
@@ -98,11 +97,10 @@ function App() {
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors', // Importante para Google Apps Script
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      console.log('Datos enviados correctamente');
     } catch (error) {
       console.error('Error al enviar datos:', error);
     }
@@ -110,46 +108,50 @@ function App() {
 
   if (screen === 'registration') {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 text-white">
+      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-center p-6 text-slate-800 font-sans">
         <Logo />
-        <form onSubmit={handleRegister} className="mt-8 w-full max-w-md bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-xl space-y-6">
-          <h2 className="text-2xl font-bold text-center">Registro de Participante</h2>
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1">Nombre Completo</label>
-            <input 
-              required
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-              value={participant.name}
-              onChange={e => setParticipant({...participant, name: e.target.value})}
-            />
+        <form onSubmit={handleRegister} className="mt-12 w-full max-w-sm bg-white p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100 space-y-6">
+          <div className="text-center mb-4">
+            <h2 className="text-xl font-semibold text-slate-800">Bienvenido</h2>
+            <p className="text-sm text-slate-400">Ingresa tus datos para comenzar</p>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1">Edad</label>
-            <input 
-              required
-              type="number"
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-              value={participant.age}
-              onChange={e => setParticipant({...participant, age: e.target.value})}
-            />
+          <div className="space-y-4">
+            <div>
+              <input 
+                required
+                placeholder="Nombre completo"
+                className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-300"
+                value={participant.name}
+                onChange={e => setParticipant({...participant, name: e.target.value})}
+              />
+            </div>
+            <div>
+              <input 
+                required
+                type="number"
+                placeholder="Edad"
+                className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-300"
+                value={participant.age}
+                onChange={e => setParticipant({...participant, age: e.target.value})}
+              />
+            </div>
+            <div>
+              <select 
+                required
+                className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-slate-400"
+                value={participant.gender}
+                onChange={e => setParticipant({...participant, gender: e.target.value})}
+              >
+                <option value="">Selecciona tu sexo</option>
+                <option value="Hombre">Hombre</option>
+                <option value="Mujer">Mujer</option>
+                <option value="Otro">Otro</option>
+                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1">Sexo</label>
-            <select 
-              required
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-              value={participant.gender}
-              onChange={e => setParticipant({...participant, gender: e.target.value})}
-            >
-              <option value="">Seleccionar...</option>
-              <option value="Hombre">Hombre</option>
-              <option value="Mujer">Mujer</option>
-              <option value="Otro">Otro</option>
-              <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-            </select>
-          </div>
-          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-95">
-            Comenzar Registro
+          <button type="submit" className="w-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-medium py-4 rounded-2xl shadow-sm transition-all active:scale-95">
+            Comenzar
           </button>
         </form>
       </div>
@@ -158,23 +160,18 @@ function App() {
 
   if (screen === 'instructions') {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-white text-center">
-        <div className="max-w-2xl bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl">
-          <h2 className="text-4xl font-black mb-6">Instrucciones</h2>
-          <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-            Se te presentarán <span className="text-blue-400 font-bold">4 objetos</span> en pantalla. <br/><br/>
-            Tu tarea es identificar lo más rápido posible si los 4 son <span className="text-blue-400 font-bold">exactamente del mismo color</span> o si hay <span className="text-pink-500 font-bold">uno que sea diferente</span>.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 text-left">
-            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-              <span className="text-blue-400 font-bold block mb-1">Niveles 1-20:</span> Colores sólidos.
-            </div>
-            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-              <span className="text-pink-400 font-bold block mb-1">Niveles 21-30:</span> Gradientes de color.
-            </div>
+      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-center p-6 text-slate-800 text-center font-sans">
+        <div className="max-w-lg w-full bg-white p-12 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100">
+          <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </div>
-          <button onClick={startExperiment} className="bg-white text-slate-950 font-black px-12 py-5 rounded-2xl text-xl hover:bg-blue-50 transition-all active:scale-95">
-            ¡ENTENDIDO!
+          <h2 className="text-3xl font-semibold mb-6 tracking-tight">Cómo jugar</h2>
+          <p className="text-slate-500 text-lg mb-10 leading-relaxed font-light">
+            Observa los 4 objetos. <br/>
+            ¿Son todos del <span className="font-semibold text-slate-800 underline decoration-blue-200 underline-offset-4">mismo color</span> o hay uno diferente?
+          </p>
+          <button onClick={startExperiment} className="w-full bg-slate-900 text-white font-medium px-12 py-5 rounded-2xl text-lg hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-200">
+            Entendido
           </button>
         </div>
       </div>
@@ -183,37 +180,37 @@ function App() {
 
   if (screen === 'playing' && currentTrial) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-between p-6 text-white">
-        <div className="w-full max-w-lg flex justify-between items-center bg-slate-900 px-6 py-3 rounded-2xl border border-slate-800">
-          <span className="text-slate-400 font-medium">Participante: <span className="text-white">{participant.name}</span></span>
-          <span className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-bold border border-blue-500/30">
-            Ronda {round} / 30
-          </span>
+      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-between py-12 px-6 text-slate-800 font-sans">
+        <div className="w-full max-w-sm flex flex-col items-center space-y-4">
+          <div className="bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-sm border border-slate-100 flex items-center space-y-0 space-x-3">
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Ronda {round} de 30</span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 md:gap-12 p-8 bg-slate-900/50 rounded-3xl border border-slate-800/50">
+        <div className="grid grid-cols-2 gap-8 md:gap-16 p-12 bg-white rounded-[4rem] shadow-[0_40px_80px_rgba(0,0,0,0.03)] border border-slate-50 transition-all">
           {currentTrial.shapes.map((s, idx) => {
             const ShapeComp = shapes[s.type];
             return (
-              <div key={idx} className="w-24 h-24 md:w-40 md:h-40 flex items-center justify-center">
-                <ShapeComp className="w-full h-full drop-shadow-2xl" style={s.style} />
+              <div key={idx} className="w-24 h-24 md:w-36 md:h-36 flex items-center justify-center transition-transform hover:scale-105 duration-500">
+                <ShapeComp className="w-full h-full drop-shadow-[0_10px_10px_rgba(0,0,0,0.05)]" style={s.style} />
               </div>
             );
           })}
         </div>
 
-        <div className="w-full max-w-2xl grid grid-cols-2 gap-4 mb-8">
+        <div className="w-full max-w-md grid grid-cols-2 gap-4">
           <button 
             onClick={() => handleResponse(true)}
-            className="bg-emerald-600 hover:bg-emerald-500 p-6 rounded-2xl font-black text-xl shadow-lg shadow-emerald-900/20 transition-all active:scale-95 border-b-4 border-emerald-800"
+            className="bg-[#E8F1FF] text-[#0066FF] hover:bg-[#D8E8FF] p-7 rounded-[2rem] font-semibold text-sm transition-all active:scale-95 border border-blue-100/50"
           >
             TODOS IGUALES
           </button>
           <button 
             onClick={() => handleResponse(false)}
-            className="bg-rose-600 hover:bg-rose-500 p-6 rounded-2xl font-black text-xl shadow-lg shadow-rose-900/20 transition-all active:scale-95 border-b-4 border-rose-800"
+            className="bg-[#FFF0F3] text-[#FF4D6D] hover:bg-[#FFE5EB] p-7 rounded-[2rem] font-semibold text-sm transition-all active:scale-95 border border-rose-100/50"
           >
-            HAY UNO DIFERENTE
+            HAY UN DIFERENTE
           </button>
         </div>
       </div>
@@ -225,32 +222,30 @@ function App() {
     const avgTime = results.reduce((acc, r) => acc + r.responseTime, 0) / results.length;
 
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-white text-center">
-        <div className="max-w-xl w-full bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl">
-          <div className="w-20 h-20 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/30">
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-center p-6 text-slate-800 text-center font-sans">
+        <div className="max-w-md w-full bg-white p-12 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100">
+          <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-emerald-100">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </div>
-          <h2 className="text-4xl font-black mb-2">¡Completado!</h2>
-          <p className="text-slate-400 mb-8">Gracias por participar en el experimento.</p>
+          <h2 className="text-3xl font-semibold mb-2 tracking-tight">Finalizado</h2>
+          <p className="text-slate-400 mb-10 font-light">Gracias por tu participación, {participant.name}.</p>
           
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-              <span className="text-slate-400 block text-xs uppercase font-bold tracking-widest mb-1">Aciertos</span>
-              <span className="text-3xl font-black text-emerald-400">{correctCount} / 30</span>
+          <div className="grid grid-cols-2 gap-4 mb-10">
+            <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-widest mb-2">Aciertos</span>
+              <span className="text-3xl font-light text-slate-800">{correctCount}<span className="text-sm text-slate-300 ml-1">/ 30</span></span>
             </div>
-            <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-              <span className="text-slate-400 block text-xs uppercase font-bold tracking-widest mb-1">Tiempo Promedio</span>
-              <span className="text-3xl font-black text-blue-400">{(avgTime / 1000).toFixed(2)}s</span>
+            <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-widest mb-2">Tiempo</span>
+              <span className="text-3xl font-light text-slate-800">{(avgTime / 1000).toFixed(2)}<span className="text-sm text-slate-300 ml-1">s</span></span>
             </div>
           </div>
-
-          <p className="text-slate-500 text-sm mb-8 italic">Los datos se están sincronizando con Google Sheets...</p>
 
           <button 
             onClick={() => setScreen('registration')}
-            className="w-full bg-slate-800 hover:bg-slate-700 py-4 rounded-xl font-bold transition-all"
+            className="w-full bg-slate-900 text-white py-5 rounded-2xl font-medium transition-all hover:bg-slate-800"
           >
-            Nuevo Participante
+            Nuevo participante
           </button>
         </div>
       </div>
