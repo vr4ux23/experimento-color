@@ -77,20 +77,11 @@ function App() {
   const sendDataToSheets = async (finalResults: ResultRecord[]) => {
     const SCRIPT_URL = 'https://script.google.com/macros/s/REEMPLAZAR_CON_TU_URL/exec';
     
-    const correctEasy = finalResults.filter(r => r.difficulty === 'easy' && r.correct).length;
-    const correctInter = finalResults.filter(r => r.difficulty === 'intermediate' && r.correct).length;
-    const correctDiff = finalResults.filter(r => r.difficulty === 'difficult' && r.correct).length;
-    const avgTime = finalResults.reduce((acc, r) => acc + r.responseTime, 0) / finalResults.length;
-
     const payload = {
       nombre: participant.name,
       edad: participant.age,
       sexo: participant.gender,
-      aciertos_facil: correctEasy,
-      aciertos_intermedio: correctInter,
-      aciertos_dificil: correctDiff,
       aciertos_total: finalResults.filter(r => r.correct).length,
-      tiempo_promedio_ms: avgTime.toFixed(2),
       fecha: new Date().toLocaleString()
     };
 
@@ -106,149 +97,145 @@ function App() {
     }
   };
 
+  // Main wrapper with Gemini-like background
+  const PageWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div className="min-h-screen bg-[#F0F4F8] flex items-center justify-center p-4 md:p-8 font-sans selection:bg-purple-100">
+      <div className="w-full max-w-md bg-white/70 backdrop-blur-xl rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white flex flex-col items-center overflow-hidden">
+        {children}
+      </div>
+    </div>
+  );
+
   if (screen === 'registration') {
     return (
-      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-center p-6 text-slate-800 font-sans">
-        <Logo />
-        <form onSubmit={handleRegister} className="mt-12 w-full max-w-sm bg-white p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100 space-y-6">
-          <div className="text-center mb-4">
-            <h2 className="text-xl font-semibold text-slate-800">Bienvenido</h2>
-            <p className="text-sm text-slate-400">Ingresa tus datos para comenzar</p>
+      <PageWrapper>
+        <div className="p-8 w-full flex flex-col items-center">
+          <Logo />
+          <div className="mt-6 mb-8 text-center">
+            <h2 className="text-2xl font-bold text-slate-800">Hola</h2>
+            <p className="text-slate-500 text-sm">Completa tus datos para empezar</p>
           </div>
-          <div className="space-y-4">
-            <div>
-              <input 
-                required
-                placeholder="Nombre completo"
-                className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-300"
-                value={participant.name}
-                onChange={e => setParticipant({...participant, name: e.target.value})}
-              />
-            </div>
-            <div>
-              <input 
-                required
-                type="number"
-                placeholder="Edad"
-                className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-300"
-                value={participant.age}
-                onChange={e => setParticipant({...participant, age: e.target.value})}
-              />
-            </div>
-            <div>
-              <select 
-                required
-                className="w-full bg-slate-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-slate-400"
-                value={participant.gender}
-                onChange={e => setParticipant({...participant, gender: e.target.value})}
-              >
-                <option value="">Selecciona tu sexo</option>
-                <option value="Hombre">Hombre</option>
-                <option value="Mujer">Mujer</option>
-                <option value="Otro">Otro</option>
-                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-              </select>
-            </div>
-          </div>
-          <button type="submit" className="w-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-medium py-4 rounded-2xl shadow-sm transition-all active:scale-95">
-            Comenzar
-          </button>
-        </form>
-      </div>
+          <form onSubmit={handleRegister} className="w-full space-y-4">
+            <input 
+              required
+              placeholder="Nombre"
+              className="w-full bg-white/50 border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-400 outline-none transition-all"
+              value={participant.name}
+              onChange={e => setParticipant({...participant, name: e.target.value})}
+            />
+            <input 
+              required
+              type="number"
+              placeholder="Edad"
+              className="w-full bg-white/50 border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-400 outline-none transition-all"
+              value={participant.age}
+              onChange={e => setParticipant({...participant, age: e.target.value})}
+            />
+            <select 
+              required
+              className="w-full bg-white/50 border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-400 outline-none transition-all text-slate-600 appearance-none"
+              value={participant.gender}
+              onChange={e => setParticipant({...participant, gender: e.target.value})}
+            >
+              <option value="">Género</option>
+              <option value="Hombre">Hombre</option>
+              <option value="Mujer">Mujer</option>
+              <option value="Otro">Otro</option>
+              <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+            </select>
+            <button type="submit" className="w-full bg-gradient-to-r from-[#1a73e8] to-[#9334e6] text-white font-bold py-4 rounded-xl shadow-md hover:opacity-90 transition-all active:scale-[0.98]">
+              Entrar
+            </button>
+          </form>
+        </div>
+      </PageWrapper>
     );
   }
 
   if (screen === 'instructions') {
     return (
-      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-center p-6 text-slate-800 text-center font-sans">
-        <div className="max-w-lg w-full bg-white p-12 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100">
-          <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+      <PageWrapper>
+        <div className="p-10 text-center flex flex-col items-center">
+          <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6">
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </div>
-          <h2 className="text-3xl font-semibold mb-6 tracking-tight">Cómo jugar</h2>
-          <p className="text-slate-500 text-lg mb-10 leading-relaxed font-light">
-            Observa los 4 objetos. <br/>
-            ¿Son todos del <span className="font-semibold text-slate-800 underline decoration-blue-200 underline-offset-4">mismo color</span> o hay uno diferente?
+          <h2 className="text-2xl font-bold mb-4 text-slate-800">¿Cómo funciona?</h2>
+          <p className="text-slate-600 mb-8 leading-relaxed">
+            Verás 4 objetos. Toca el botón azul si todos son <span className="font-bold text-blue-600">iguales</span> o el botón rosa si hay <span className="font-bold text-pink-600">uno distinto</span>.
           </p>
-          <button onClick={startExperiment} className="w-full bg-slate-900 text-white font-medium px-12 py-5 rounded-2xl text-lg hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-200">
-            Entendido
+          <button onClick={startExperiment} className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-95">
+            ¡Listo!
           </button>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   if (screen === 'playing' && currentTrial) {
     return (
-      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-between py-12 px-6 text-slate-800 font-sans">
-        <div className="w-full max-w-sm flex flex-col items-center space-y-4">
-          <div className="bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full shadow-sm border border-slate-100 flex items-center space-y-0 space-x-3">
-            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Ronda {round} de 30</span>
+      <PageWrapper>
+        <div className="w-full p-6 flex flex-col items-center justify-between min-h-[500px]">
+          <div className="flex justify-between items-center w-full px-2 mb-8">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">Ronda {round}/30</span>
+            <div className="h-1.5 w-24 bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300" style={{ width: `${(round/30)*100}%` }}></div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+            {currentTrial.shapes.map((s, idx) => {
+              const ShapeComp = shapes[s.type];
+              return (
+                <div key={idx} className="w-20 h-20 md:w-28 md:h-28 flex items-center justify-center transform transition-all">
+                  <ShapeComp className="w-full h-full drop-shadow-sm" style={s.style} />
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="w-full grid grid-cols-2 gap-3 mt-12">
+            <button 
+              onClick={() => handleResponse(true)}
+              className="bg-blue-50 text-blue-600 border border-blue-100 p-5 rounded-2xl font-bold text-xs uppercase tracking-wider hover:bg-blue-100 transition-all active:scale-95"
+            >
+              Iguales
+            </button>
+            <button 
+              onClick={() => handleResponse(false)}
+              className="bg-pink-50 text-pink-600 border border-pink-100 p-5 rounded-2xl font-bold text-xs uppercase tracking-wider hover:bg-pink-100 transition-all active:scale-95"
+            >
+              Diferente
+            </button>
           </div>
         </div>
-
-        <div className="grid grid-cols-2 gap-8 md:gap-16 p-12 bg-white rounded-[4rem] shadow-[0_40px_80px_rgba(0,0,0,0.03)] border border-slate-50 transition-all">
-          {currentTrial.shapes.map((s, idx) => {
-            const ShapeComp = shapes[s.type];
-            return (
-              <div key={idx} className="w-24 h-24 md:w-36 md:h-36 flex items-center justify-center transition-transform hover:scale-105 duration-500">
-                <ShapeComp className="w-full h-full drop-shadow-[0_10px_10px_rgba(0,0,0,0.05)]" style={s.style} />
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="w-full max-w-md grid grid-cols-2 gap-4">
-          <button 
-            onClick={() => handleResponse(true)}
-            className="bg-[#E8F1FF] text-[#0066FF] hover:bg-[#D8E8FF] p-7 rounded-[2rem] font-semibold text-sm transition-all active:scale-95 border border-blue-100/50"
-          >
-            TODOS IGUALES
-          </button>
-          <button 
-            onClick={() => handleResponse(false)}
-            className="bg-[#FFF0F3] text-[#FF4D6D] hover:bg-[#FFE5EB] p-7 rounded-[2rem] font-semibold text-sm transition-all active:scale-95 border border-rose-100/50"
-          >
-            HAY UN DIFERENTE
-          </button>
-        </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   if (screen === 'results') {
     const correctCount = results.filter(r => r.correct).length;
-    const avgTime = results.reduce((acc, r) => acc + r.responseTime, 0) / results.length;
-
     return (
-      <div className="min-h-screen bg-[#FBFBFC] flex flex-col items-center justify-center p-6 text-slate-800 text-center font-sans">
-        <div className="max-w-md w-full bg-white p-12 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100">
-          <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-emerald-100">
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <PageWrapper>
+        <div className="p-10 text-center flex flex-col items-center">
+          <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mb-6">
+            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </div>
-          <h2 className="text-3xl font-semibold mb-2 tracking-tight">Finalizado</h2>
-          <p className="text-slate-400 mb-10 font-light">Gracias por tu participación, {participant.name}.</p>
+          <h2 className="text-2xl font-bold mb-2 text-slate-800">¡Terminado!</h2>
+          <p className="text-slate-500 mb-8">Gracias por tu tiempo, {participant.name}.</p>
           
-          <div className="grid grid-cols-2 gap-4 mb-10">
-            <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-widest mb-2">Aciertos</span>
-              <span className="text-3xl font-light text-slate-800">{correctCount}<span className="text-sm text-slate-300 ml-1">/ 30</span></span>
-            </div>
-            <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-widest mb-2">Tiempo</span>
-              <span className="text-3xl font-light text-slate-800">{(avgTime / 1000).toFixed(2)}<span className="text-sm text-slate-300 ml-1">s</span></span>
-            </div>
+          <div className="w-full bg-slate-50 p-6 rounded-2xl mb-8 border border-slate-100">
+            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-widest block mb-1">Tu puntuación</span>
+            <span className="text-4xl font-bold text-slate-800">{correctCount}<span className="text-lg text-slate-300"> / 30</span></span>
           </div>
 
           <button 
             onClick={() => setScreen('registration')}
-            className="w-full bg-slate-900 text-white py-5 rounded-2xl font-medium transition-all hover:bg-slate-800"
+            className="w-full bg-gradient-to-r from-slate-800 to-slate-900 text-white py-4 rounded-xl font-bold shadow-lg hover:opacity-90 transition-all active:scale-95"
           >
-            Nuevo participante
+            Nuevo intento
           </button>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 

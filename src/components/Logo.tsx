@@ -1,14 +1,17 @@
+import React from 'react';
+
 const Logo = () => (
-  <div className="flex flex-col items-center justify-center p-6 bg-white/50 backdrop-blur-md rounded-[2.5rem] shadow-sm border border-white/20">
-    <div className="relative w-20 h-20 mb-3 flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl shadow-inner">
-      <svg viewBox="0 0 24 24" className="w-12 h-12 text-slate-800 opacity-80">
+  <div className="flex flex-col items-center justify-center p-4">
+    <div className="relative w-16 h-16 mb-2 flex items-center justify-center bg-gradient-to-tr from-[#1a73e8] via-[#9334e6] to-[#ff4081] rounded-2xl shadow-lg transform rotate-3">
+      <svg viewBox="0 0 24 24" className="w-10 h-10 text-white drop-shadow-md">
         <path fill="currentColor" d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" />
       </svg>
+      <div className="absolute -inset-1 bg-gradient-to-tr from-[#1a73e8] to-[#9334e6] rounded-2xl blur opacity-30 -z-10"></div>
     </div>
-    <h1 className="text-2xl font-semibold tracking-tight text-slate-800">
-      Color<span className="font-light text-slate-500">Attention</span>
+    <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-[#1a73e8] to-[#9334e6]">
+      Color<span className="font-medium">Attention</span>
     </h1>
-    <p className="mt-1 text-[10px] text-slate-400 font-bold tracking-[0.2em] uppercase">Investigación Visual</p>
+    <div className="h-1 w-8 bg-gradient-to-r from-[#1a73e8] to-[#9334e6] rounded-full mt-1"></div>
   </div>
 );
 
