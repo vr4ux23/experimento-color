@@ -80,13 +80,24 @@ function App() {
 
   const sendDataToSheets = async (finalResults: ResultRecord[]) => {
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyNYrMB9tDvLJIRmgm2BKgf1canIlj2AxkBLDZ-PvsP5nm-udJJEL0xP56F4XZ01v7Jw/exec';
+    
+    const correctEasy = finalResults.filter(r => r.difficulty === 'easy' && r.correct).length;
+    const correctInter = finalResults.filter(r => r.difficulty === 'intermediate' && r.correct).length;
+    const correctDiff = finalResults.filter(r => r.difficulty === 'difficult' && r.correct).length;
+    const avgTime = finalResults.reduce((acc, r) => acc + r.responseTime, 0) / finalResults.length;
+
     const payload = {
       nombre: participant.name,
       edad: participant.age,
       sexo: participant.gender,
+      aciertos_facil: correctEasy,
+      aciertos_intermedio: correctInter,
+      aciertos_dificil: correctDiff,
       aciertos_total: finalResults.filter(r => r.correct).length,
+      tiempo_promedio_ms: avgTime.toFixed(2),
       fecha: new Date().toLocaleString()
     };
+
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
