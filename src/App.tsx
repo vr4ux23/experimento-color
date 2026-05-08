@@ -253,12 +253,12 @@ function App() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#F8FAFC] flex items-center justify-center p-4 font-sans selection:bg-blue-100">
+    <div className="fixed inset-0 bg-[#F8FAFC] flex items-center justify-center p-4 font-sans selection:bg-blue-100 overflow-hidden">
       <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200 blur-[100px] rounded-full"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-200 blur-[100px] rounded-full"></div>
       </div>
-      <div className="w-full max-w-[400px] bg-white rounded-[3rem] shadow-[0_30px_100px_rgba(0,0,0,0.06)] border border-white flex flex-col items-center overflow-hidden z-10">
+      <div className="w-full max-w-[450px] bg-white rounded-[3rem] shadow-[0_30px_100px_rgba(0,0,0,0.06)] border border-white flex flex-col items-center overflow-hidden z-10">
         {renderContent()}
       </div>
     </div>
