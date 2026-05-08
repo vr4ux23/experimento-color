@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Logo = () => (
   <div className="flex flex-col items-center justify-center p-6 bg-white/50 backdrop-blur-md rounded-[2.5rem] shadow-sm border border-white/20">
     <div className="relative w-20 h-20 mb-3 flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl shadow-inner">
