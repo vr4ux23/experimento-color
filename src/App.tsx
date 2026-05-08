@@ -79,7 +79,7 @@ function App() {
   };
 
   const sendDataToSheets = async (finalResults: ResultRecord[]) => {
-    const SCRIPT_URL = 'https://script.google.com/macros/s/REEMPLAZAR_CON_TU_URL/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyyNYrMB9tDvLJIRmgm2BKgf1canIlj2AxkBLDZ-PvsP5nm-udJJEL0xP56F4XZ01v7Jw/exec';
     const payload = {
       nombre: participant.name,
       edad: participant.age,
@@ -187,10 +187,12 @@ function App() {
       case 'playing':
         if (!currentTrial) return null;
         return (
-          <div className="w-full p-6 flex flex-col items-center justify-between min-h-[500px]">
-            <div className="flex justify-between items-center w-full mb-6">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 px-3 py-1 rounded-full shadow-sm">RONDA {round}/30</span>
-              <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+          <div className="w-full p-8 flex flex-col items-center justify-between min-h-[520px]">
+            <div className="flex flex-col items-center w-full mb-8 space-y-3">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] bg-slate-50 border border-slate-100 px-4 py-1.5 rounded-full shadow-sm">
+                RONDA {round} / 30
+              </span>
+              <div className="h-1 w-24 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                 <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-300" style={{ width: `${(round/30)*100}%` }}></div>
               </div>
             </div>
