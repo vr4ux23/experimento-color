@@ -17,7 +17,7 @@ const getRandomShape = (): ShapeType => {
   return keys[Math.floor(Math.random() * keys.length)];
 };
 
-const getRandomHSL = (hRange = [0, 360], sRange = [50, 90], lRange = [40, 60]) => {
+const getRandomHSL = (hRange = [0, 360], sRange = [60, 90], lRange = [45, 55]) => {
   const h = Math.floor(Math.random() * (hRange[1] - hRange[0])) + hRange[0];
   const s = Math.floor(Math.random() * (sRange[1] - sRange[0])) + sRange[0];
   const l = Math.floor(Math.random() * (lRange[1] - lRange[0])) + lRange[0];
@@ -35,7 +35,7 @@ export const generateTrial = (difficulty: Difficulty): TrialData => {
   
   if (difficulty === 'easy') {
     const baseColor = getRandomHSL();
-    const differentColor = getRandomHSL([(baseColor.h + 120) % 360, (baseColor.h + 240) % 360]);
+    const differentColor = getRandomHSL([(baseColor.h + 60) % 360, (baseColor.h + 300) % 360]);
     
     for (let i = 0; i < 4; i++) {
       const color = (!isAllSame && i === differentIndex) ? differentColor : baseColor;
@@ -46,14 +46,9 @@ export const generateTrial = (difficulty: Difficulty): TrialData => {
     }
   } else if (difficulty === 'intermediate') {
     const baseColor = getRandomHSL();
-    // Subtle difference: change hue by 10-15 degrees or lightness by 10%
-    const diffType = Math.random() > 0.5 ? 'h' : 'l';
     const differentColor = { ...baseColor };
-    if (diffType === 'h') {
-      differentColor.h = (baseColor.h + 15) % 360;
-    } else {
-      differentColor.l = baseColor.l > 50 ? baseColor.l - 12 : baseColor.l + 12;
-    }
+    // Diferencia sutil de tono (12 grados)
+    differentColor.h = (baseColor.h + 12) % 360;
 
     for (let i = 0; i < 4; i++) {
       const color = (!isAllSame && i === differentIndex) ? differentColor : baseColor;
@@ -63,27 +58,20 @@ export const generateTrial = (difficulty: Difficulty): TrialData => {
       });
     }
   } else {
-    // Difficult: Gradients
+    // Difícil: Gradientes
     const baseColor1 = getRandomHSL();
-    const baseColor2 = getRandomHSL();
-    const baseAngle = Math.floor(Math.random() * 360);
+    const baseColor2 = getRandomHSL([(baseColor1.h + 40) % 360, (baseColor1.h + 320) % 360]);
     
-    const getGradient = (angle: number, c1: {h:number, s:number, l:number}, c2: {h:number, s:number, l:number}) => 
-      `linear-gradient(${angle}deg, ${hslToString(c1)} 0%, ${hslToString(c2)} 100%)`;
+    const getGradient = (c1: {h:number, s:number, l:number}, c2: {h:number, s:number, l:number}) => 
+      `linear-gradient(180deg, ${hslToString(c1)} 0%, ${hslToString(c2)} 100%)`;
 
     const baseStyle = {
-      background: getGradient(baseAngle, baseColor1, baseColor2),
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      color: 'transparent' // Fallback
+      background: getGradient(baseColor1, baseColor2)
     };
 
-    // Very subtle difference in gradient angle or one color
-    const diffAngle = (baseAngle + 25) % 360;
+    // Gradiente diferente: invertimos los colores o cambiamos uno sutilmente
     const diffStyle = {
-      ...baseStyle,
-      background: getGradient(diffAngle, baseColor1, baseColor2)
+      background: getGradient(baseColor2, baseColor1)
     };
 
     for (let i = 0; i < 4; i++) {
